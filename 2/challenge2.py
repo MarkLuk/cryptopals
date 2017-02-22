@@ -1,6 +1,5 @@
 #!python
 import sys
-
    
 # Main entry point
 def main():

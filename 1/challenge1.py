@@ -35,8 +35,5 @@ def main():
     # Convert bytes to base64
     print (baset64(bytes));
     
-    
-
-
 if __name__ == "__main__":
     main()
