@@ -2,6 +2,10 @@
 import sys
 import numpy as np;
 
+# Bytes to String
+def bytes2string(bytes):
+    return "".join(map(chr, bytes));
+
 # Metric function to compare histograms
 def chi2_distance(histA, histB, eps = 1e-10):
 	# compute the chi-squared distance
@@ -49,11 +53,8 @@ def score(freq):
             hist[i] = freq[letters[i]];
     # Compare 2 histograms and calculate score (lower -> better)
     return chi2_distance(hist, real_hist.values());
-    
-# Main entry point
-def main():
-    # Convert input to bytes
-    hexstr = sys.argv[1]
+
+def decrypt_hexstr(hexstr):
     hex_bytes = bytearray.fromhex(hexstr);
     # Guesses score dictonary
     guesses = {};
@@ -70,13 +71,17 @@ def main():
 
     # Sort guesses by their frequency (lower -> better)
     sorted_guesses = sorted(guesses, key=guesses.__getitem__,reverse=False);
+       
+    # Extract key`
+    key = sorted_guesses[0]
+    decoded_bytes = [key^x for x in hex_bytes]
     
-    # Print 5 best guesses
-    print ("Key", "\tScore", "\t\tDecoded string");
-    for i in sorted_guesses[0:5]:
-        decoded_bytes = [i^x for x in hex_bytes]
-        decoded_str="".join(map(chr, decoded_bytes))
-        print (i, guesses[i], decoded_str)
+    return decoded_bytes;
+    
+# Main entry point
+def main():
+    # Convert input to bytes
+    print(bytes2string(decrypt_hexstr(sys.argv[1])));
     
 if __name__ == "__main__":
     main()
