@@ -1,7 +1,9 @@
 #!python
 import sys
+import challenge3 as ch3;
 import challenge5 as ch5;
 import utils
+import numpy as np
 
 # Hamming weight
 def hw(n):
@@ -14,11 +16,12 @@ def hw(n):
 # Hamming distance    
 def hd(x,y):
     return hw(x^y)
-
+# Hamming distance normalized with key length
 def hd_normalized(x,y, byte_size):
-    return hd(x,y) / (byte_size)
+    return hd(x,y) / (byte_size*8)
 
-def base642bytes(base64):
+# Converts Base64 to byte array   
+def base64_bytes(base64):
     b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     x = 0;
     for b in base64:
@@ -27,49 +30,73 @@ def base642bytes(base64):
         else:
             y = b64.index(b)
         x = (x << 6) | y
-    return int2bytes(x)
+    return utils.int_bytes(x)
 
-def bytes2ints(bytes, int_size):
-    [bytes2int(bytes[i:i+int_size]) for i in range(int_size)]
-
+# Get heuristical scoring per key size    
 def get_keysize_score(enc_bytes, keysize):
-    elem_num = (len(enc_bytes) // keysize);
-    sum = 0;
-    count = 0;
-    for j in range(0, elem_num, keysize):
-        for i in range(0, elem_num, keysize):
-            if (i!=j):
-                x1=bytes2int(enc_bytes[i:i+keysize]);
-                x2=bytes2int(enc_bytes[j:j+keysize]);
-                sum += hd_normalized(x1, x2, keysize)
-                count+=1
-        
-    # return average hamming distance normalized by keysize
-    return (sum / count)
-    
+    x1=utils.bytes_int(enc_bytes[0:keysize]);
+    x2=utils.bytes_int(enc_bytes[1*keysize:2*keysize]);
+    x3=utils.bytes_int(enc_bytes[2*keysize:3*keysize]);
+    x4=utils.bytes_int(enc_bytes[3*keysize:4*keysize]);
+    score= (hd_normalized(x1, x2, keysize) + 
+            hd_normalized(x2, x3, keysize) +
+            hd_normalized(x3, x4, keysize))/3;
+    return score
+
+# Get array of most highly probably key sizes    
 def get_keysize(enc_bytes):
     dict = {}
     for size in range(2,41):
         score = get_keysize_score(enc_bytes, size)
         dict.update({size:score})
     
-    sorted_guesses = sorted(dict, key=dict.__getitem__,reverse=True);
-    return list(sorted_guesses)[0];
-        
+    sorted_guesses = sorted(dict, key=dict.__getitem__,reverse=False);
+    return list(sorted_guesses);
+
+# Split list into chunks    
+def chunks(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
+# For given keysize - determine the most probable key        
+def extract_key_per_keysize(enc_bytes, keysize):
+    # Split lists by keysize (we ignore the lefovers)
+    lists = list(chunks(list(enc_bytes), keysize))[:-1]
+    # Transpose list matrix (all 1st bytes in each array into 1st array, etc.)
+    trans_list=list(map(list, zip(*lists)));
+    # For each array, find 1byte XOR key
+    key=[];
+    for l in trans_list:
+        key.append(ch3.XOR_1B_guess_key(l)[0]);
+    return key;
+
+# For given keysize - decrypt with the most probable key    
+def decrypt_per_keysize(enc_bytes, keysize):
+    key = extract_key_per_keysize(enc_bytes, keysize);
+    return ch5.encrypt_key(enc_bytes, key);
     
 # Main entry point
-def main():
-    in_file = sys.argv[1];
+def main(in_file):
     f = open(in_file, 'r');
     bigline="";
-    # Convert intput base64 to byte array
+    # Convert input base64 to byte array
     for line in f:
         bigline+=line.rstrip('\r\n')
-    enc_bytes = base642bytes(bigline)
+    enc_bytes = base64_bytes(bigline)
     # Guess key size
-    keysize = get_keysize(enc_bytes)
-    print("Keysize = ", keysize)
-    
+    keysizes = get_keysize(enc_bytes)
+    # Decrypt with each keysize (we try only few best candidates)
+    # then score the decrypted text with english score and determine best decryption
+    guesses = {}
+    for k in keysizes[0:5]:
+        dec_bytes = decrypt_per_keysize(enc_bytes, k)
+        score = ch3.english_score(dec_bytes)
+        dec_text = utils.bytes_string(dec_bytes)
+        guesses.update({dec_text:score})
+    # Sort guesses by their frequency (lower -> better)
+    sorted_guesses = sorted(guesses, key=guesses.__getitem__,reverse=False);
+    # Eventually print the best scored decryption
+    print (sorted_guesses[0])
     
 if __name__ == "__main__":
-    main()
+    main('6.txt')
