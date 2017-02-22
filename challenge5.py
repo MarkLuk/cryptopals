@@ -4,6 +4,9 @@ import sys
 def string2bytes(str):
     return [ord(x) for x in list(str)]
 
+def bytes2hexstring(bytes):
+   return ''.join('%02x'%i for i in bytes)
+   
 def encrypt_key(data, key):
     out=[0]*len(data);
     for i in range(len(data)):
@@ -21,7 +24,7 @@ def main():
     for line in f:
         bigline+=line
     enc_line=encrypt_key(string2bytes(bigline),key_bytes);
-    print(''.join('%02x'%i for i in enc_line));
+    print(bytes2hexstring(enc_line));
     
 if __name__ == "__main__":
     main()
