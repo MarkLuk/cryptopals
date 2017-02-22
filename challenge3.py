@@ -42,7 +42,7 @@ def english_score(bytes):
                  'j':0.10,
                  'z':0.07};
     # Calculate byte frequency
-    freq = dict((x, bytes.count(x)) for x in bytes)
+    freq = dict((x, bytes.count(x)/len(bytes)) for x in bytes)
     # build input histogram
     letters = [ord(x) for x in list(real_hist)];
     hist=[0]*len(letters);
