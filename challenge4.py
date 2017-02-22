@@ -2,22 +2,20 @@
 import sys
 import numpy as np;
 import challenge3 as ch3;
+import utils
     
 # Main entry point
-def main():
+def main(in_file):
     guesses={}
-    # Get input file
-    in_file = sys.argv[1];
     f = open(in_file, 'r')
     for line in f:
-        # Extract line 
+        # Extract line bytes
         line = line.rstrip('\r\n')
+        line_bytes = utils.hexstr_bytes(line)
         # Try to decrypt it
-        decrypt_bytes = ch3.decrypt_hexstr(line);
-        # Get frequency dictionary;
-        freq = dict((x, decrypt_bytes.count(x)) for x in decrypt_bytes);
-        # Get score
-        guess_score = ch3.score(freq);
+        decrypt_bytes = ch3.XOR_1B_decrypt(line_bytes);
+        # Get English score
+        guess_score = ch3.english_score(decrypt_bytes);
         # Add to guesses dictionary
         guesses.update({line:guess_score});
     
@@ -25,10 +23,11 @@ def main():
     sorted_guesses = sorted(guesses, key=guesses.__getitem__,reverse=False);
        
     # Print guess
-    line = sorted_guesses[0]
-    decrypt_bytes = ch3.decrypt_hexstr(line);
-    decrypt_str=ch3.bytes2string(decrypt_bytes);
+    line            = sorted_guesses[0]
+    line_bytes      = utils.hexstr_bytes(line)
+    decrypt_bytes   = ch3.XOR_1B_decrypt(line_bytes);
+    decrypt_str     = utils.bytes_string(decrypt_bytes);
     print (decrypt_str);
     
 if __name__ == "__main__":
-    main()
+    main('4.txt')

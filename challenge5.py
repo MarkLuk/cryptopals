@@ -1,11 +1,6 @@
 #!python
 import sys
-
-def string2bytes(str):
-    return [ord(x) for x in list(str)]
-
-def bytes2hexstring(bytes):
-   return ''.join('%02x'%i for i in bytes)
+import utils
    
 def encrypt_key(data, key):
     out=[0]*len(data);
@@ -14,17 +9,20 @@ def encrypt_key(data, key):
     return out
     
 # Main entry point
-def main():
-    in_file = sys.argv[1];
-    key = sys.argv[2];
+def main(in_file, key_str):
     # Convert key to bytes
-    key_bytes = string2bytes(key);
+    key_bytes = utils.string_bytes(key_str);
     f = open(in_file, 'r')
+    # Agregate file into 1 big string
     bigline=""
     for line in f:
         bigline+=line
-    enc_line=encrypt_key(string2bytes(bigline),key_bytes);
-    print(bytes2hexstring(enc_line));
+    # Prepare plaintext for encryptoin
+    plain_bytes = utils.string_bytes(bigline)
+    # Encrypt plaintext with key
+    enc_bytes = encrypt_key(plain_bytes,key_bytes);
+    # Print results
+    print(utils.bytes_hexstr(enc_bytes));
     
 if __name__ == "__main__":
-    main()
+    main('5.txt', 'ICE')
