@@ -1,7 +1,7 @@
 #!python
 import sys
-import challenge3 as ch3;
-import challenge5 as ch5;
+import challenge03 as ch3;
+import challenge05 as ch5;
 import utils
 import numpy as np
 

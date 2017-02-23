@@ -1,7 +1,7 @@
 #!python
 import sys
 import numpy as np;
-import challenge3 as ch3;
+import challenge03 as ch3;
 import utils
     
 # Main entry point

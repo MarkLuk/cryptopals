@@ -1,6 +1,6 @@
 #!python
 import sys
-import challenge6 as ch6
+import challenge06 as ch6
 import utils
 from Crypto.Cipher import AES
 
