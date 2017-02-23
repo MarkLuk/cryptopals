@@ -20,7 +20,7 @@ def int_hexstr(int):
 
 # String <-> Bytes    
 def string_bytes(str):
-    return [ord(x) for x in list(str)]
+    return bytearray([ord(x) for x in list(str)])
 
 def bytes_string(bytes):
     str="";
