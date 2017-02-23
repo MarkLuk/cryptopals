@@ -25,7 +25,6 @@ def main(in_file):
         score = score_ECB(bytes)
         # Add line with score to dictonary
         guesses.update({line:score});
-        print (score)
     
     # Sort guesses by score
     sorted_guesses = sorted(guesses, key=guesses.__getitem__,reverse=False);
