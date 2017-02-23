@@ -75,14 +75,19 @@ def decrypt_per_keysize(enc_bytes, keysize):
     key = extract_key_per_keysize(enc_bytes, keysize);
     return ch5.encrypt_key(enc_bytes, key);
     
-# Main entry point
-def main(in_file='6.txt'):
-    f = open(in_file, 'r');
+def base64file_bytes(file):
+    f = open(file, 'r');
     bigline="";
     # Convert input base64 to byte array
     for line in f:
         bigline+=line.rstrip('\r\n')
-    enc_bytes = base64_bytes(bigline)
+    # Convert to bytes
+    return base64_bytes(bigline)
+
+# Main entry point
+def main(in_file='6.txt'):
+    # Extract bytes
+    enc_bytes=base64file_bytes(in_file)
     # Guess key size
     keysizes = get_keysize(enc_bytes)
     # Decrypt with each keysize (we try only few best candidates)
