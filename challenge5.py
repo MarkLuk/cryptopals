@@ -9,7 +9,7 @@ def encrypt_key(data, key):
     return out
     
 # Main entry point
-def main(in_file, key_str):
+def main(in_file='5.txt', key_str='ICE'):
     # Convert key to bytes
     key_bytes = utils.string_bytes(key_str);
     f = open(in_file, 'r')
@@ -25,4 +25,4 @@ def main(in_file, key_str):
     print(utils.bytes_hexstr(enc_bytes));
     
 if __name__ == "__main__":
-    main('5.txt', 'ICE')
+    main()

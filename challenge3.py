@@ -78,7 +78,7 @@ def XOR_1B_decrypt(bytes):
     return decoded_bytes;
     
 # Main entry point
-def main(hex_str):
+def main(hex_str='1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736'):
     # Convert input to bytes
     bytes = utils.hexstr_bytes(hex_str)
     # Perfomr decryption
@@ -87,4 +87,4 @@ def main(hex_str):
     print(utils.bytes_string(decrypted_bytes));
     
 if __name__ == "__main__":
-    main('1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736')
+    main()

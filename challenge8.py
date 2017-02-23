@@ -15,7 +15,7 @@ def score_ECB(bytes):
         
     
 # Main entry point
-def main(in_file):
+def main(in_file='8.txt'):
     f = open(in_file, 'r');
     # Check each line and get it score
     guesses = {}
@@ -34,4 +34,4 @@ def main(in_file):
     
     
 if __name__ == "__main__":
-    main('8.txt')
+    main()

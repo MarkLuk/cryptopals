@@ -5,7 +5,7 @@ import challenge3 as ch3;
 import utils
     
 # Main entry point
-def main(in_file):
+def main(in_file='4.txt'):
     guesses={}
     f = open(in_file, 'r')
     for line in f:
@@ -30,4 +30,4 @@ def main(in_file):
     print (decrypt_str);
     
 if __name__ == "__main__":
-    main('4.txt')
+    main()

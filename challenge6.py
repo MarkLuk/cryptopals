@@ -76,7 +76,7 @@ def decrypt_per_keysize(enc_bytes, keysize):
     return ch5.encrypt_key(enc_bytes, key);
     
 # Main entry point
-def main(in_file):
+def main(in_file='6.txt'):
     f = open(in_file, 'r');
     bigline="";
     # Convert input base64 to byte array
@@ -99,4 +99,4 @@ def main(in_file):
     print (sorted_guesses[0])
     
 if __name__ == "__main__":
-    main('6.txt')
+    main()

@@ -5,7 +5,7 @@ import utils
 from Crypto.Cipher import AES
 
 # Main entry point
-def main(in_file, key_str):
+def main(in_file='7.txt', key_str='YELLOW SUBMARINE'):
     f = open(in_file, 'r');
     bigline="";
     # Convert input base64 to byte array
@@ -22,4 +22,4 @@ def main(in_file, key_str):
     
     
 if __name__ == "__main__":
-    main('7.txt', 'YELLOW SUBMARINE')
+    main()
