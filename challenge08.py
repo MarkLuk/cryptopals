@@ -1,17 +1,15 @@
 #!python
 import sys
-import challenge06 as ch6
 import utils
-from Crypto.Cipher import AES
 
 def score_ECB(bytes):
     # Split into 16 bytes chunks
-    lists = ch6.chunks(bytes, 16)
+    lists = utils.chunks(bytes, 16)
     # Do hamming distance between all blocks
     xor = 0
     for l in lists:
         xor ^= utils.bytes_int(l)
-    return ch6.hw(xor)
+    return utils.hw(xor)
         
     
 # Main entry point
