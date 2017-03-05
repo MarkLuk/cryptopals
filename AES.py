@@ -9,13 +9,20 @@ def randomKey():
     
 def randomIV():
     return utils.random_bytes(16)
-    
+ 
 def padPKCS7(bytes, size):
     padSize = size - (len(bytes) % size);
     if padSize == 0:
         padSize = size
     return bytes + bytearray([padSize]*padSize);
 
+def verifyUnpadPKCS7(bytes):
+    pad_size = bytes[-1]
+    for i in range(1, pad_size+1):
+        if (bytes[-i] != pad_size):
+            raise Exception('Padding is incorrect');
+    return bytes[:-pad_size];
+            
 def unpadPKCS7(bytes):
     pad_size = bytes[len(bytes)-1]
     return bytes[:-pad_size];
