@@ -34,6 +34,8 @@ def main():
     ch10.main()
     print ("Challenge #11")
     ch11.main()
+    print ("Challenge #12")
+    ch12.main()
 
 if __name__ == "__main__":
     main()
