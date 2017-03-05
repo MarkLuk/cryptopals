@@ -3,19 +3,7 @@ import sys
 import challenge03 as ch3;
 import challenge05 as ch5;
 import utils
-import numpy as np
-
-# Converts Base64 to byte array   
-def base64_bytes(base64):
-    b64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-    x = 0;
-    for b in base64:
-        if (b=='='):
-            y = 0
-        else:
-            y = b64.index(b)
-        x = (x << 6) | y
-    return utils.int_bytes(x)
+import b64
 
 # Get heuristical scoring per key size    
 def get_keysize_score(enc_bytes, keysize):
@@ -54,20 +42,11 @@ def extract_key_per_keysize(enc_bytes, keysize):
 def decrypt_per_keysize(enc_bytes, keysize):
     key = extract_key_per_keysize(enc_bytes, keysize);
     return ch5.encrypt_key(enc_bytes, key);
-    
-def base64file_bytes(file):
-    f = open(file, 'r');
-    bigline="";
-    # Convert input base64 to byte array
-    for line in f:
-        bigline+=line.rstrip('\r\n')
-    # Convert to bytes
-    return base64_bytes(bigline)
 
 # Main entry point
 def main(in_file='6.txt'):
     # Extract bytes
-    enc_bytes=base64file_bytes(in_file)
+    enc_bytes=b64.decode_file(in_file)
     # Guess key size
     keysizes = get_keysize(enc_bytes)
     # Decrypt with each keysize (we try only few best candidates)

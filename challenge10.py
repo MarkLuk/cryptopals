@@ -1,11 +1,11 @@
 #! python
 import utils
-import challenge06 as ch6
 import AES
+import b64
     
 def main(file_name='10.txt', key='YELLOW SUBMARINE'):
     # Extract raw data from file
-    bytes=ch6.base64file_bytes(file_name)
+    bytes=b64.decode_file(file_name)
     # Set default IV
     iv = bytearray([0]*AES.block_size)
     # Decrypt the file
