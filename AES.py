@@ -4,6 +4,12 @@ import Crypto.Cipher.AES as CryptAES
 
 block_size = CryptAES.block_size
 
+def randomKey():
+    return  bytes(utils.random_bytes(16))
+    
+def randomIV():
+    return utils.random_bytes(16)
+    
 def padPKCS7(bytes, size):
     padSize = size - (len(bytes) % size);
     if padSize == 0:

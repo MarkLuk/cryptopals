@@ -2,12 +2,6 @@
 import utils
 import AES
 
-def randomAESKey():
-    return  bytes(utils.random_bytes(16))
-    
-def randomIV():
-    return utils.random_bytes(16)
-
 def randomPadLen():
     return utils.random_bytes(1)[0] % 6 + 5;
     
@@ -17,10 +11,10 @@ def encryption_oracle(input):
     input = pad1 + input + pad2
     if (utils.random_bool()):
         print ('Performing CBC')
-        return ('CBC', AES.CBC_encrypt(randomAESKey(), input, randomIV()))
+        return ('CBC', AES.CBC_encrypt(AES.randomKey(), input, AES.randomIV()))
     else:
         print ('Performing ECB')
-        return ('ECB', AES.ECB_encrypt(randomAESKey(), input))
+        return ('ECB', AES.ECB_encrypt(AES.randomKey(), input))
 
 def encryption_guess(input):
     if (input[16:32] == input[32:48]):
