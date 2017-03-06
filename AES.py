@@ -79,3 +79,19 @@ def CBC_decrypt(key, data, iv):
         iv = b
     # Remove padding
     return verifyUnpadPKCS7(out)
+
+def CTR_encrypt(key, data, nonce):
+    ctr = 0
+    # Split to blocks
+    blocks = utils.chunks(data, CryptAES.block_size)
+    out=bytearray();
+    for b in blocks:
+        # Ecrypt block
+        ctr_bytes = utils.int_bytes(ctr<<64 | nonce, 'little', 128//8)
+        plain = utils.xor_bytes(b, ECB_encrypt_raw(key, ctr_bytes))
+        out += plain
+        ctr += 1
+    return out
+
+def CTR_decrypt(key, data, nonce):
+    return CTR_encrypt(key, data, nonce)
