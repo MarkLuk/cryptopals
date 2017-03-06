@@ -38,8 +38,8 @@ def bytes_hexstr(bytes):
    return int_hexstr(bytes_int(bytes))
 
 # Random int
-def random_num():
-    return bytes_int(random_bytes(4));
+def random_num(start=0, end=0x100000000):
+    return (bytes_int(random_bytes(4))%(end-start)) + start
    
 # Random bytes
 def random_bytes(n):
