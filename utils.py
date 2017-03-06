@@ -7,11 +7,11 @@ def ceildiv(a,b):
     return (a + (b-1))//b;
 
 # Integer <-> Bytes    
-def int_bytes(x):
-    return x.to_bytes(ceildiv(x.bit_length(),8), 'big')
+def int_bytes(x, endianness='big',size=0):
+    return x.to_bytes(size if size!=0 else ceildiv(x.bit_length(),8), endianness)
 
-def bytes_int(bytes):
-    return int.from_bytes(bytes, 'big')
+def bytes_int(bytes, endianness='big'):
+    return int.from_bytes(bytes, endianness)
 
 # Hex-String <-> Int    
 def hexstr_int(hexstr):
