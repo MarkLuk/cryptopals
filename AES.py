@@ -47,7 +47,7 @@ def ECB_encrypt(key_str, bytes):
 def ECB_decrypt(key_str, bytes):
     iv = '';
     cipher = CryptAES.new(key_str, CryptAES.MODE_ECB, iv)
-    return unpadPKCS7(cipher.decrypt(bytes))
+    return verifyUnpadPKCS7(cipher.decrypt(bytes))
     
 def CBC_encrypt(key, data, iv):
     # Padding data
