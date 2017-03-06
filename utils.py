@@ -37,6 +37,10 @@ def hexstr_bytes(hexstr):
 def bytes_hexstr(bytes):
    return int_hexstr(bytes_int(bytes))
 
+# Random int
+def random_num():
+    return bytes_int(random_bytes(4));
+   
 # Random bytes
 def random_bytes(n):
     return random.getrandbits(8*n).to_bytes(n, byteorder='big')
