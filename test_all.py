@@ -15,6 +15,9 @@ import challenge13 as ch13
 import challenge14 as ch14
 import challenge15 as ch15
 import challenge16 as ch16
+import challenge17 as ch17
+import challenge18 as ch18
+import challenge19 as ch19
 
 def main():
     print ("Challenge #1")
@@ -49,6 +52,12 @@ def main():
     ch15.main()
     print ("Challenge #16")
     ch16.main()
+    print ("Challenge #17")
+    ch17.main()
+    print ("Challenge #18")
+    ch18.main()
+    print ("Challenge #19")
+    ch19.main()
 
 if __name__ == "__main__":
     main()
