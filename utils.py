@@ -75,3 +75,12 @@ def xor_bytes(b1, b2):
     xor = [b1[i] ^ b2[i] for i in range(len(b1))]
     return bytes(xor);
 
+def bit_get(n, i):
+    return int((n>>i)&1)
+    
+def bit_set(n, i, val):
+    if val==0:
+        return n & ~(1<<i)
+    else:
+        return n | (1<<i)
+
