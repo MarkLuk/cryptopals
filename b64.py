@@ -9,11 +9,5 @@ def decode(base64):
     return b64.b64decode(base64)
     
 def decode_file(file):
-    f = open(file, 'r');
-    bigline="";
-    # Convert input base64 to byte array
-    for line in f:
-        bigline+=line.rstrip('\r\n')
-    # Convert to bytes
-    return decode(bigline)
+    return decode(open(file, 'r').read().replace('\n','').replace('\r',''))
     
