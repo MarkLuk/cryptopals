@@ -1,15 +1,19 @@
 #!python
-import utils
+from utils import *
 import Crypto.Cipher.AES as CryptAES
 
 block_size = CryptAES.block_size
 
 def randomKey():
-    return  bytes(utils.random_bytes(16))
+    return  bytes(random_bytes(16))
     
 def randomIV():
-    return utils.random_bytes(16)
+    return random_bytes(16)
  
+def randomNonce():
+    return bytes_int(random_bytes(8))
+
+
 def padPKCS7(bytes, size=CryptAES.block_size):
     padSize = size - (len(bytes) % size);
     if padSize == 0:
@@ -53,12 +57,12 @@ def CBC_encrypt(key, data, iv):
     # Padding data
     padded_data = padPKCS7(data);
     # Split to blocks
-    blocks = utils.chunks(padded_data, CryptAES.block_size)
+    blocks = chunks(padded_data, CryptAES.block_size)
     # Perform CBC loop
     out=bytearray();
     for b in blocks:
         # Ecrypt block
-        cipher = ECB_encrypt_raw(key, utils.xor_bytes(iv, b))
+        cipher = ECB_encrypt_raw(key, xor_bytes(iv, b))
         # Attach to output
         out += cipher
         # Set next IV
@@ -67,12 +71,12 @@ def CBC_encrypt(key, data, iv):
 
 def CBC_decrypt(key, data, iv):
     # Split to blocks
-    blocks = utils.chunks(data, CryptAES.block_size)
+    blocks = chunks(data, CryptAES.block_size)
     # Perform CBC loop
     out=bytearray();
     for b in blocks:
         # Ecrypt block
-        plain = utils.xor_bytes(ECB_decrypt_raw(key, b), iv);
+        plain = xor_bytes(ECB_decrypt_raw(key, b), iv);
         # Attach to output
         out += plain
         # Set next IV
@@ -83,12 +87,12 @@ def CBC_decrypt(key, data, iv):
 def CTR_encrypt(key, data, nonce):
     ctr = 0
     # Split to blocks
-    blocks = utils.chunks(data, CryptAES.block_size)
+    blocks = chunks(data, CryptAES.block_size)
     out=bytearray();
     for b in blocks:
         # Ecrypt block
-        ctr_bytes = utils.int_bytes(ctr<<64 | nonce, 'little', 128//8)
-        plain = utils.xor_bytes(b, ECB_encrypt_raw(key, ctr_bytes))
+        ctr_bytes = int_bytes(ctr<<64 | nonce, 'little', 128//8)
+        plain = xor_bytes(b, ECB_encrypt_raw(key, ctr_bytes))
         out += plain
         ctr += 1
     return out
