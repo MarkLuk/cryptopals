@@ -15,32 +15,29 @@ ror = lambda val, r_bits, max_bits: \
 def int32(x):
     return x&0xFFFFFFFF
     
-def padding(input):
-    ml = len(input)*8
-    # Adding 0x80
-    input = bytes(input) + bytes([0x80])
-    # Num of zeros to add
-    num_zeros = 64-(len(input)%64)
-    if num_zeros < 8:
-        input += bytes([0]*(64 - num_zeros + 76))
+def padding(input, forged_len=None):
+    if forged_len is None:
+        ml = len(input)*8
     else:
-        input += bytes([0]*(num_zeros - 8))
+        ml = forged_len*8
+    # Adding 0x80
+    pad = bytes([0x80])
+    # Num of zeros to add
+    num_zeros = 64-((ml//8+1)%64)
+    if num_zeros < 8:
+        pad += bytes([0]*(num_zeros + 56))
+    else:
+        pad += bytes([0]*(num_zeros - 8))
     # Append 64bit length
-    input += int_bytes(ml, endianness='big', size=8);
+    pad += int_bytes(ml, endianness='big', size=8);
     
-    return input
+    return pad
     
-def digest(input):
-    # Set constants
-    h0 = 0x67452301
-    h1 = 0xEFCDAB89
-    h2 = 0x98BADCFE
-    h3 = 0x10325476
-    h4 = 0xC3D2E1F0
+def digest(input, h0 = 0x67452301, h1 = 0xEFCDAB89, h2 = 0x98BADCFE, h3 = 0x10325476, h4 = 0xC3D2E1F0, forged_len=None):
     # Add padding
-    input = padding(input)
+    input += padding(bytes(input),forged_len)
     # Split into blocks
-    blocks = chunks(input, 64)
+    blocks = chunks(bytes(input), 64)
     w = [0]*80
     # Process each block
     for b in blocks:
@@ -56,7 +53,12 @@ def digest(input):
         c = h2
         d = h3
         e = h4
-    
+        # print ('A = ', hex(a))
+        # print ('B = ', hex(b))
+        # print ('C = ', hex(c))
+        # print ('D = ', hex(d))
+        # print ('E = ', hex(e))
+        
         #Main loop
         for i in range(80):
             if i<20:
@@ -87,7 +89,13 @@ def digest(input):
         h2 = int32(h2 + c)
         h3 = int32(h3 + d)
         h4 = int32(h4 + e)
-
+        
+        # print('H0 = ', hex(h0))
+        # print('H1 = ', hex(h1))
+        # print('H2 = ', hex(h2))
+        # print('H3 = ', hex(h3))
+        # print('H4 = ', hex(h4))
+        
     #Produce the final hash value (big-endian) as a 160-bit number:
     hh = (h0 << 128) | (h1 << 96) | (h2 << 64) | (h3 << 32) | h4
     return int_bytes(hh, endianness='big',size=160//8)
