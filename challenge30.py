@@ -25,10 +25,10 @@ def main():
     original_mac= encryption_oracle(original_msg)
     print('Original msg    = ', original_msg)
     print('Orignal msg MAC = ', bytes_hexstr(original_mac))
-    # Re-create SHA state from hash value
+    # Re-create MD4 state from hash value
     print ('---------------')
     print ('Trying to forge')
-    # Reverse SHA state
+    # Reverse MD4 state
     h = reverse_MD4_state(original_mac)
     # Set string that we want to append
     forged_str=b';admin=true'
