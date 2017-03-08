@@ -81,7 +81,7 @@ def main(delay=0.05, retries=1):
         sig[j]=max_index
     # Verify signature
     code, time, text = test_connection(attack_file, sig)
-    print (bytes_hexstr(text))
+    print (text)
 
 if __name__ == "__main__":
     main()
