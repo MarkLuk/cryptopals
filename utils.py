@@ -34,8 +34,8 @@ def bytes_string(bytes):
 def hexstr_bytes(hexstr):
    return int_bytes(hexstr_int(hexstr))
 
-def bytes_hexstr(bytes):
-   return bytes.hex()
+def bytes_hexstr(bs):
+   return bytes(bs).hex()
 
 # Random int
 def random_num(start=0, end=0x100000000):
@@ -93,3 +93,18 @@ rol = lambda val, r_bits, max_bits: \
 ror = lambda val, r_bits, max_bits: \
     ((val & (2**max_bits-1)) >> r_bits%max_bits) | \
     (val << (max_bits-(r_bits%max_bits)) & (2**max_bits-1))
+
+
+def modular_pow(base, exponent, modulus):
+    if modulus == 1:
+        return 0
+    result = 1
+    base = base % modulus
+    while exponent > 0:
+        if (exponent % 2 == 1):
+           result = (result * base) % modulus
+        exponent = exponent >> 1
+        base = (base * base) % modulus
+    return result
+
+
