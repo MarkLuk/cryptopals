@@ -6,13 +6,12 @@ block_size = CryptAES.block_size
 
 def randomKey():
     return  bytes(random_bytes(16))
-    
+
 def randomIV():
     return random_bytes(16)
- 
+
 def randomNonce():
     return bytes_int(random_bytes(8))
-
 
 def padPKCS7(bytes, size=CryptAES.block_size):
     padSize = size - (len(bytes) % size);
@@ -28,31 +27,27 @@ def verifyUnpadPKCS7(bytes):
         if (bytes[-i] != pad_size):
             raise Exception('Padding is incorrect');
     return bytes[:-pad_size];
-            
+
 def unpadPKCS7(bytes):
     pad_size = bytes[len(bytes)-1]
     return bytes[:-pad_size];
 
-def ECB_encrypt_raw(key_str, bytes):
-    iv = '';
-    cipher = CryptAES.new(key_str, CryptAES.MODE_ECB, iv)
-    return cipher.encrypt(bytes)
+def ECB_encrypt_raw(key_str, bs):
+    cipher = CryptAES.new(bytes(key_str), CryptAES.MODE_ECB)
+    return cipher.encrypt(bs)
 
-def ECB_decrypt_raw(key_str, bytes):
-    iv = '';
-    cipher = CryptAES.new(key_str, CryptAES.MODE_ECB, iv)
-    return cipher.decrypt(bytes)
-    
-def ECB_encrypt(key_str, bytes):
-    iv = '';
-    cipher = CryptAES.new(key_str, CryptAES.MODE_ECB, iv)
-    return cipher.encrypt(padPKCS7(bytes))
+def ECB_decrypt_raw(key_str, bs):
+    cipher = CryptAES.new(bytes(key_str), CryptAES.MODE_ECB)
+    return cipher.decrypt(bs)
 
-def ECB_decrypt(key_str, bytes):
-    iv = '';
-    cipher = CryptAES.new(key_str, CryptAES.MODE_ECB, iv)
-    return verifyUnpadPKCS7(cipher.decrypt(bytes))
-    
+def ECB_encrypt(key_str, bs):
+    cipher = CryptAES.new(bytes(key_str), CryptAES.MODE_ECB)
+    return cipher.encrypt(padPKCS7(bs))
+
+def ECB_decrypt(key_str, bs):
+    cipher = CryptAES.new(bytes(key_str), CryptAES.MODE_ECB)
+    return verifyUnpadPKCS7(cipher.decrypt(bs))
+
 def CBC_encrypt(key, data, iv):
     # Padding data
     padded_data = padPKCS7(data);

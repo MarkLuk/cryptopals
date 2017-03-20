@@ -2,8 +2,8 @@
 import utils
 import AES
 import b64
-    
-def main(file_name='10.txt', key='YELLOW SUBMARINE'):
+
+def main(file_name='10.txt', key=b'YELLOW SUBMARINE'):
     # Extract raw data from file
     bytes=b64.decode_file(file_name)
     # Set default IV
@@ -12,7 +12,6 @@ def main(file_name='10.txt', key='YELLOW SUBMARINE'):
     plain = AES.CBC_decrypt(key,bytes,iv)
     # Print output
     print(utils.bytes_string(plain));
-    
+
 if __name__ == "__main__":
     main()
-    

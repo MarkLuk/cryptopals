@@ -19,13 +19,13 @@ def edit(ciphertext, offset, newtext):
     new_cipher = AES.CTR_encrypt(key, input, nonce)
     return ciphertext[:offset] + new_cipher[offset:]
 
-def main(in_file='25.txt', ecb_key='YELLOW SUBMARINE'):
+def main(in_file='25.txt', ecb_key=b'YELLOW SUBMARINE'):
     # Get cipher text
     ciphertext = get_ciphertext(in_file, ecb_key)
-    # Send ciphertext as 'new text'. Double encryption with CTR will 
+    # Send ciphertext as 'new text'. Double encryption with CTR will
     # cancel-out revealing the plaintext
     plaintext = edit(ciphertext, 0, ciphertext);
     print (bytes_string(plaintext))
-    
+
 if __name__ == "__main__":
     main()
