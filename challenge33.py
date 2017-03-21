@@ -36,9 +36,6 @@ def thread_main(my_id, party_id,public_keys, public_keys_ready):
 
 
 def main():
-    global alice_id
-    global bob_id
-
     # Start Alice thread
     alice = threading.Thread(target=thread_main, args=(alice_id, bob_id, public_keys, public_keys_ready))
     alice.start()
