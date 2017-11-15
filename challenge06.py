@@ -5,28 +5,28 @@ import challenge05 as ch5;
 import utils
 import b64
 
-# Get heuristical scoring per key size    
+# Get heuristical scoring per key size
 def get_keysize_score(enc_bytes, keysize):
     x1=utils.bytes_int(enc_bytes[0:keysize]);
     x2=utils.bytes_int(enc_bytes[1*keysize:2*keysize]);
     x3=utils.bytes_int(enc_bytes[2*keysize:3*keysize]);
     x4=utils.bytes_int(enc_bytes[3*keysize:4*keysize]);
-    score= (utils.hd_normalized(x1, x2, keysize) + 
+    score= (utils.hd_normalized(x1, x2, keysize) +
             utils.hd_normalized(x2, x3, keysize) +
             utils.hd_normalized(x3, x4, keysize))/3;
     return score
 
-# Get array of most highly probably key sizes    
+# Get array of most highly probably key sizes
 def get_keysize(enc_bytes):
     dict = {}
     for size in range(2,41):
         score = get_keysize_score(enc_bytes, size)
         dict.update({size:score})
-    
+
     sorted_guesses = sorted(dict, key=dict.__getitem__,reverse=False);
     return list(sorted_guesses);
 
-# For given keysize - determine the most probable key        
+# For given keysize - determine the most probable key
 def extract_key_per_keysize(enc_bytes, keysize):
     # Split lists by keysize (we ignore the lefovers)
     lists = list(utils.chunks(list(enc_bytes), keysize))[:-1]
@@ -38,7 +38,7 @@ def extract_key_per_keysize(enc_bytes, keysize):
         key.append(ch3.XOR_1B_guess_key(l)[0]);
     return key;
 
-# For given keysize - decrypt with the most probable key    
+# For given keysize - decrypt with the most probable key
 def decrypt_per_keysize(enc_bytes, keysize):
     key = extract_key_per_keysize(enc_bytes, keysize);
     return ch5.encrypt_key(enc_bytes, key);
@@ -47,6 +47,8 @@ def decrypt_per_keysize(enc_bytes, keysize):
 def main(in_file='6.txt'):
     # Extract bytes
     enc_bytes=b64.decode_file(in_file)
+    print (enc_bytes, len(enc_bytes))
+
     # Guess key size
     keysizes = get_keysize(enc_bytes)
     # Decrypt with each keysize (we try only few best candidates)
@@ -61,6 +63,6 @@ def main(in_file='6.txt'):
     sorted_guesses = sorted(guesses, key=guesses.__getitem__,reverse=False);
     # Eventually print the best scored decryption
     print (sorted_guesses[0])
-    
+
 if __name__ == "__main__":
     main()
